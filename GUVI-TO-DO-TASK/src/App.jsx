@@ -20,7 +20,6 @@ function App() {
     }
   }, []);
 
-
   // function To Delete Tasks //
   const deleteTask = (index) => {
     let templist = structuredClone(tasklist);
@@ -28,7 +27,7 @@ function App() {
     localStorage.setItem("tasklist", JSON.stringify(templist));
     setTasklist(templist);
   };
-  
+
   // function To Save And Edit Tasks //
   const saveTask = (taskobj) => {
     if (edit != undefined) {
@@ -50,91 +49,80 @@ function App() {
   return (
     <>
       <div className="container border  py-5 ">
-        
-        
-       <h1 className=" display-6  text-center   text-success">
-          My-to-do
-        </h1>
-       <div className="row">
-       
-       <div className="col  border border-black mt-5">
-        {/* Calling Create Task Component */}
-        <Createtask
-          status={status}
-          setStatus={setStatus}
-          setEdit={setEdit}
-          taskName={taskName}
-          setTaskName={setTaskName}
-          description={description}
-          setDescription={setDescription}
-          save={saveTask}
-        />
-       </div>
-       </div>
-          <div className="row mt-4">
-          <div className="col d-flex justify-content-around border border-black ">
-          <div className="px-3 col border border-black ">
-            Mytodo
+        <h1 className=" display-6  text-center   text-success">My-to-do</h1>
+        <div className="row">
+          <div className="col   mt-5">
+            {/* Calling Create Task Component */}
+            <Createtask
+              status={status}
+              setStatus={setStatus}
+              setEdit={setEdit}
+              taskName={taskName}
+              setTaskName={setTaskName}
+              description={description}
+              setDescription={setDescription}
+              save={saveTask}
+            />
           </div>
-          <div className="px-5 col border border-black text-end">
-            <label>Status Filter:</label>
-            <select
-              onChange={(e) => {
-                console.log(e.target.value);
-                let a = JSON.parse(localStorage.getItem("tasklist"));
-                console.log(a);
-                if (e.target.value == "All") {
-                  setTasklist(a);
-                  return;
-                }
-                let b = a.filter((value) => {
-                  if (value.status == e.target.value) {
-                    return value;
+        </div>
+        <div className="row mt-4">
+          <div className="col d-flex justify-content-around">
+            <div className="px-3 col  ">Mytodo</div>
+            <div className="px-5 col  text-end">
+              <label>Status Filter:</label>
+              <select
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  let a = JSON.parse(localStorage.getItem("tasklist"));
+                  console.log(a);
+                  if (e.target.value == "All") {
+                    setTasklist(a);
+                    return;
                   }
-                });
-                setTasklist(b);
-              }}
-              name="status"
-              id="status"
-            >
-              <option value="All">All</option>
-              <option className=" bg-success" value="Completed">
-                Completed
-              </option>
-              <option className=" bg-danger" value="Not-Completed">
-                Not-Completed
-              </option>
-            </select>
+                  let b = a.filter((value) => {
+                    if (value.status == e.target.value) {
+                      return value;
+                    }
+                  });
+                  setTasklist(b);
+                }}
+                name="status"
+                id="status"
+              >
+                <option value="All">All</option>
+                <option className=" bg-success" value="Completed">
+                  Completed
+                </option>
+                <option className=" bg-danger" value="Not-Completed">
+                  Not-Completed
+                </option>
+              </select>
+            </div>
           </div>
         </div>
+
+        {/* Calling Card Component  */}
+        <div className="task-container mt-3 px-3">
+          {tasklist &&
+            tasklist.map((obj, index) => (
+              <Card
+                edit={edit}
+                setEdit={setEdit}
+                taskName={taskName}
+                setTaskName={setTaskName}
+                description={description}
+                setDescription={setDescription}
+                save={saveTask}
+                taskobj={obj}
+                deleteTask={deleteTask}
+                index={index}
+                key={index}
+                staus={status}
+                setStatus={setStatus}
+              />
+            ))}
         </div>
-      {/* calling card Component  */}
-      
-       <div className="row border border-black mt-2">
-      <div className="task-container mt-3 px-3">
-            {tasklist &&
-              tasklist.map((obj, index) => (
-                <Card
-                  edit={edit}
-                  setEdit={setEdit}
-                  taskName={taskName}
-                  setTaskName={setTaskName}
-                  description={description}
-                  setDescription={setDescription}
-                  save={saveTask}
-                  taskobj={obj}
-                  deleteTask={deleteTask}
-                  index={index}
-                  key={index}
-                  staus={status}
-                  setStatus={setStatus}
-                />
-              ))}
-          </div>
-          </div>
-        </div>
-     
-     
+      </div>
     </>
   );
 }
